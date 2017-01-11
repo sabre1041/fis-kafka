@@ -1,0 +1,24 @@
+camel:
+  springboot:
+    name: fis-kafka
+  route:
+    sendWebsocketIn: kafka:{{kafka.host}}:{{kafka.port}}?topic={{kafka.topic}}&groupId={{kafka.groupId}}
+    sendRestOut: kafka:{{kafka.host}}:{{kafka.port}}?topic={{kafka.topic}}
+
+server:
+  port: 8080
+
+endpoints:
+  enabled: false
+  health:
+    enabled: true
+
+zookeeper:
+  host: zookeeper
+  port: 2181
+kafka:
+  host: kafka
+  port: 9092
+  topic: fis-kafka
+  key: 0
+  groupId: fis-kafka-app

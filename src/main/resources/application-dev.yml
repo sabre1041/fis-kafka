@@ -1,0 +1,25 @@
+camel:
+  springboot:
+    name: fis-kafka
+  route:
+    sendWebsocketIn: direct:bypassKafka
+    sendRestOut: direct:bypassKafka
+
+server:
+  port: 8080
+
+# disable all management enpoints except health
+endpoints:
+  enabled: false
+  health:
+    enabled: true
+    
+zookeeper:
+  host: zookeeper
+  port: 2181
+kafka:
+  host: kafka
+  port: 9092
+  topic: fis-kafka
+  key: 0
+  groupId: fis-kafka-app

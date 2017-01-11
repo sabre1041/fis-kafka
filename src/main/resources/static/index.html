@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<html>
+<head>
+    <title>Fuse Integration Services (FIS) Kafka Demo</title>
+    <script type='text/javascript'>
+
+        var attempts = 1;
+
+        if (!window.WebSocket) {
+            alert("WebSocket not supported by this browser");
+        }
+
+        function generateInterval (k) {
+             var maxInterval = (Math.pow(2, k) - 1) * 1000;
+
+              if (maxInterval > 30*1000) {
+                maxInterval = 30*1000; // If the generated interval is more than 30 seconds, truncate it down to 30 seconds.
+              }
+
+              // generate the interval to a random number between 0 and the maxInterval determined from above
+              return Math.random() * maxInterval;
+            }
+
+        function $() { return document.getElementById(arguments[0]); }
+
+        var websockets = {
+	        create: function() {
+		        var location;
+
+	            if (window.location.protocol == 'http:') {
+	               location = 'ws://' + window.location.host + '/websocket';
+	            } else {
+	           	   location ='wss://' + window.location.host + '/websocket';
+	            }
+
+                this._ws=new WebSocket(location);
+                this._ws.onopen=this._onopen;
+                this._ws.onmessage=this._onmessage;
+                this._ws.onclose=this._onclose;
+		    },
+
+	        _onmessage: function(m) {
+
+		        if (m.data) {
+			        var chat=$('chat');
+			        var spanText = document.createElement('span');
+			        spanText.className='text';
+			        spanText.innerHTML=m.data;
+			        var lineBreak = document.createElement('br');
+			        chat.appendChild(spanText);
+			        chat.appendChild(lineBreak);
+			        chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+		        }
+	        },
+
+	        _onclose: function(m) {
+		        this._ws=null;
+		        document.getElementById("status").innerHTML = "DISCONNECTED";
+		        var time = generateInterval(attempts);
+		        setTimeout(function () {
+		            // We've tried to reconnect so increment the attempts by 1
+		            attempts++;
+
+		            // Connection has closed so try to reconnect every 10 seconds.
+		            websockets.create();
+		        }, time);
+
+	        },
+
+	        _onopen: function(m) {
+	            attempts = 1;
+	            document.getElementById("status").innerHTML = "CONNECTED";
+	        }
+
+        };
+
+    </script>
+    <style type='text/css'>
+        div { border: 0px solid black; }
+        div#chat { clear: both; width: 80em; height: 40ex; overflow: auto; background-color: #f0f0f0; padding: 4px; border: 1px solid black; }
+    </style>
+</head>
+<body>
+<h2>Fuse Integration Services (FIS) Kafka Demo</h2>
+Events emitted from Kafka<br/><br/>
+<div style="position: absolute; top: 0; right: 0; width: 100px; text-align:right;">
+    <img src="images/logo_small.png"/><a href="swagger.html">Swagger</a>
+  </div>
+<div>Status: <span id='status'>DISCONNECTED</span></div>
+<div id='chat'></div>
+
+<script type='text/javascript'>
+    websockets.create();
+</script>
+</body>
+</html>
