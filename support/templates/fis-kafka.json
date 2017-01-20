@@ -49,6 +49,30 @@
         }
     ],
     "objects": [
+       {
+         "kind": "Route",
+         "apiVersion": "v1",
+         "metadata": {
+                "name": "${APPLICATION_NAME}",
+            "labels": {
+                "application": "${APPLICATION_NAME}"
+            },
+            "annotations": {
+                "openshift.io/host.generated": "true"
+            }
+         },
+         "spec": {
+                "to": {
+                    "kind": "Service",
+                    "name": "${APPLICATION_NAME}",
+                    "weight": 100
+                },
+                    "port": {
+                        "targetPort": 8080
+                    },
+                "wildcardPolicy": "None"
+          }
+        },
         {
             "kind": "Service",
             "apiVersion": "v1",
