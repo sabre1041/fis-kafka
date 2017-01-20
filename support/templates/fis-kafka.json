@@ -49,6 +49,25 @@
         }
     ],
     "objects": [
+       {
+         "kind": "Route",
+         "apiVersion": "v1",
+         "metadata": {
+                "name": "${APPLICATION_NAME}",
+            "labels": {
+                "application": "${APPLICATION_NAME}"
+            }
+         },
+         "spec": {
+                "host": "${HOSTNAME_HTTP}",
+                "to": {
+                    "kind": "Service",
+                    "name": "${APPLICATION_NAME}"                },
+                    "port": {
+                        "targetPort": 8080
+                    }
+          }
+        },
         {
             "kind": "Service",
             "apiVersion": "v1",
