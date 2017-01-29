@@ -75,4 +75,8 @@ The Swagger UI is available by clicking the link at the top right hand corner of
 
 Expand the available method in the swagger UI and in the textbox, enter a message and click **Try it out!**
 
-The message will route through the integration and be displayed in the textbook on the main page of the application.
+![](images/fis-kafka-swagger.png "Swagger Interface")
+
+The message will route through the integration and be displayed in the textbox on the main page of the application.
+
+![](images/fis-kafka-ui.png "User Interface")
